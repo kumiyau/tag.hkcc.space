@@ -1,0 +1,354 @@
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang=""> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang=""> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9" lang=""> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang=""> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>HKCC Timetable Auto-Generator (TAG)</title>
+        <meta name="description" content="HKCC TAG 幫你自動生成 Timetable， 再變做圖片或者 import 入去 Google Calendar / iCalendar 都得！ 得咗！">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+        <link rel="stylesheet" href="css/bootstrap.min.css">
+        <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+        <link rel="stylesheet" href="css/fullcalendar.css">
+        <link rel="stylesheet" href="css/main.css?v=Ieghae1R">
+
+        <script src="js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>
+    </head>
+    <body>
+    <!--[if lt IE 8]>
+        <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="/">TAG</a>
+
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="//hkcc.space">Homepage</a></li>
+            <li class="active"><a href="/">HKCC TAG</a></li>
+            <li><a href="/speed">SPEED TAG</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <div id="app" @paste="onPaste" @error="onError">
+    <!-- Main jumbotron for a primary marketing message or call to action -->
+    <div class="jumbotron">
+      <div class="container">
+        <h1>HKCC Timetable Auto-Generator</h1>
+        <p>Generate timetable and export to Google Calendar with ease. </p>
+      </div>
+    </div>
+
+    <div class="container">
+      <div v-bind:class="{ step: activeStep != 0 }">
+        <div class="panel panel-primary">
+          <div class="panel-heading">
+            <h3 class="panel-title">Loading...</h3>
+          </div>
+          <div class="panel-body">
+            If it takes too long to load, refersh.
+          </div>
+        </div>
+      </div>
+      <div class="step" v-bind:class="{ stepActive: fatalError.occurred }">
+        <div class="panel panel-danger">
+          <div class="panel-heading">
+            <h3 class="panel-title">Fatal error</h3>
+          </div>
+          <div class="panel-body">
+            <p>An fatal error has been occurred. Please help us to fix this problem by reporting it to <code>tag@hkcc.space</code>. Thanks!</p>
+            <p>If you are using IE browser, try Chrome / Firefox and uninstall IE.</p>
+            <h3>Error log</h3>
+            <pre>{{ fatalError.log }}</pre>
+            <h3>Schedule pasted (private information masked)</h3>
+            <pre>{{ pastedData | mask }}</pre>
+          </div>
+        </div>
+      </div>
+      <div v-bind:class="{ step: fatalError.occurred }">
+      <div class="step" v-bind:class="{ stepActive: activeStep == 1 }">
+        <div class="panel panel-primary">
+          <div class="panel-heading">
+            <h3 class="panel-title">Welcome to HKCC TAG</h3>
+          </div>
+          <div class="panel-body">
+            <div class="alert alert-danger step" role="alert" v-bind:class="{ stepActive: unsupportedBrowser }">
+              <p>
+                <strong>Error</strong> TAG only supports Desktop versions of Chrome and Firefox. Other browsers <strong>WILL</strong> encounter errors or bugs.<br>
+                <strong>錯誤</strong> 本網站目前只支持電腦版的 Chrome 以及 Firefox 瀏覽器。 使用其他瀏覽器<strong>會</strong>無法使用某些功能。
+              </p>
+              <p>
+                <a href="https://www.mozilla.org/en-GB/firefox/new/" class="btn btn-primary">Download Firefox &raquo;</a> <a href="https://www.google.com/chrome/browser/desktop/index.html" class="btn btn-primary">Download Chrome &raquo;</a>
+              </p>
+            </div>
+            <div class="alert alert-warning" role="alert">
+              <strong>Warning!</strong> As the tool is still in beta phase, please <b>double check</b> the calendar generated. <br>If you have any questions or comments, feel free to contact us via e-mail: <code>tag@hkcc.space</code>.<br><br>
+              <strong>警告!</strong> 本工具仍在測試階段，請<b>務必再三核對</b>由本工具生成的時間表。 <br>如果你有任何問題或意見， 歡迎電郵至 <code>tag@hkcc.space</code>  與我們聯繫。 
+            </div>
+              <p>This TAG is for students of <a href="http://www.hkcc-polyu.edu.hk/">Hong Kong Community College</a> only.<br></p>
+              <ol>
+                <li>Go to my.HKCC -&gt; <a href="https://www48.polyu.edu.hk/myhkcc/subreg/myTimetable.do?method=showMyTimetable" target="_blank" rel="noreferrer noopener">My Personal Timetable</a><br>
+                <img src="img/step1.jpg" alt="step1.jpg" class="img-thumbnail" width="320px"><br><br></li>
+                <li>Press <code>Ctrl-A</code> (on Mac: <code>⌘ + A</code>) to select whole page, then <code>Ctrl-C</code> (on Mac: <code>⌘ + C</code>) to copy.</a><br>
+                <img src="img/step2.jpg" alt="step2.jpg" class="img-thumbnail" width="320px"><br><br></li>
+                <li>Press <code>Ctrl-V</code> (on Mac: <code>⌘ + V</code>) and paste your schedule into the box below.<br>
+                <div class="row">
+                  <div class="col-md-6">
+                    <textarea class="form-control" rows="7" placeholder="Paste here..."></textarea>
+                  </div>
+                  <div class="col-md-6">
+                    <img src="img/step3.png" alt="step3.png" class="img-thumbnail" width="320px">
+                  </div>
+                </div>
+                  <div class="alert alert-danger step" role="alert" v-bind:class="{ stepActive: pasteError }">
+                    <strong>Error</strong> The pasted data does not seems to be a correct HKCC schedule.
+                    <pre>{{ pastedData }}</pre>
+                  </div>
+                </li>
+              </ol>
+
+              Contact us: <code>tag@hkcc.space</code>.<br>
+
+              <hr>
+
+              <h3>Update log</h3>
+              <ul>
+                <li><strong>Jan 12</strong>: Holidays &amp; school events updated.</li>
+                <li><strong>Sep 13</strong>: Important bug fix on ics generation, users are encouraged to generate the calendar and import to external application again.</li>
+                <li><strong>Sep 1</strong>: Added SPEED support and friendy ads.</li>
+                <li><strong>Aug 30</strong>: UI improvement; added week no., holiday &amp; events; added more advanced options; clearer disclaimer; better iCS file generation; clearer image; better error handling; remove info about SPEED (it does not work :/).</li>
+                <li><strong>Aug 28</strong>: Fixed few UI issue, added 'download image' feature, and color can be customized now.</li>
+                <li><strong>Aug 27</strong>: Site launch. First beta release.</li>
+              </ul>
+              <h3>Known issues</h3>
+              <ul>
+                <li>Some features does not work on Safari. Please use Chrome or Firefox.</li>
+                <li>Month view sucks. Won't fix.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+      <div class="step" v-bind:class="{ stepActive: activeStep == 2 }">
+        <h1>Pasted data</h1>
+        <div class="alert alert-info" role="alert">
+          <strong>Heads up!</strong> Please double check the pasted schedule.
+        </div>
+        <table class="table table-hover table-condensed">
+          <thead><tr><th>Subject Code</th><th>Subject Title</th><th>Gp</th><th>Act</th><th>Day</th><th>Start Time</th><th>End Time</th><th>Campus</th><th>Venue</th><th>Start Week</th><th>End Week</th><th>For Every</th></tr></thead>
+          <tbody><tr is="lesson" v-for="lesson in lessons" v-bind:lesson="lesson"></tr></tbody>
+        </table>
+        <div class="" role="group" aria-label="Navigation">
+          <button class="btn btn-warning" v-on:click="activeStep--">Incorrect</button>
+          <button class="btn btn-success" v-on:click="activeStep++">Correct</button>
+        </div>
+      </div>
+      <div class="step" v-bind:class="{ stepActive: activeStep == 3 }">
+        <h1>Rename courses</h1>
+        <p>Rename the courses for your convenience.</p>
+        <table class="table">
+          <thead><tr><th>Subject Code</th><th>Subject Title</th><th>Gp</th><th width="1em">Color</th></thead>
+          <tbody><tr is="course" v-for="course in courses" v-bind:course="course"></tr></tbody>
+        </table>
+        <button class="btn btn-success" v-on:click="activeStep++; setTimeout(function(){render()}, 100)">Done &raquo;</button>
+        <br><hr>
+
+        <h1>Advanced options</h1>
+        <p>Fine tune your personal timetable.</p>
+        <div class="form-group">
+          <button type="button" class="btn btn-default" v-bind:class="{ active: showAdvanceOptionPanel }" v-on:click="showAdvanceOptionPanel=!showAdvanceOptionPanel" role="button"><span class="glyphicon" v-bind:class="{ 'glyphicon-chevron-up': showAdvanceOptionPanel, 'glyphicon-chevron-down': !showAdvanceOptionPanel }" aria-hidden="true"></span> {{ showAdvanceOptionPanel ? "Hide advanced options" : "Show advanced options" }}</button>
+        </div>
+        <div class="step" v-bind:class="{ stepActive: showAdvanceOptionPanel }">
+          <h2>Week numbers, school events, and holidays</h2>
+          <div class="panel panel-default">
+            <div class="panel-body">
+              <div class="row">
+                <div class="col-md-6">
+                  <h3>Show...</h3>
+                  <div class="form-group">
+                    <label>
+                      <input type="checkbox" v-model="calOptions.week">
+                      Show week number on Monday
+                    </label>
+                  </div>
+                  <div class="form-group">
+                    <label>
+                      <input type="checkbox" v-model="calOptions.school">
+                      Show school events
+                    </label>
+                  </div>
+                  <div class="form-group">
+                    <label>
+                      <input type="checkbox" v-model="calOptions.holiday">
+                      Show holidays
+                    </label>
+                  </div>
+                  <div class="form-group">
+                    <label>
+                      <input type="checkbox" v-model="calOptions.lesson">
+                      Show lessons
+                    </label>
+                  </div>
+                  <div class="form-group">
+                    <label>
+                      <input type="checkbox" v-model="calOptions.forceShowSunSat">
+                      Show Sunday and Saturday even without lessons
+                    </label>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <h3>Colors for...</h3>
+                  <div class="form-group">
+                    <label for="calColorsWeek">Color for week number</label>
+                    <input type="color" class="form-control" id="calColorsWeek" v-model="calColors.week">
+                  </div>
+                  <div class="form-group">
+                    <label for="calColorsSchool">Color for school events</label>
+                    <input type="color" class="form-control" id="calColorsSchool" v-model="calColors.school">
+                  </div>
+                  <div class="form-group">
+                    <label for="calColorsHoliday">Color for holidays</label>
+                    <input type="color" class="form-control" id="calColorsHoliday" v-model="calColors.holiday">
+                  </div>
+                  <em>* Colors only applicable to generated images</em>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <button type="button" class="btn btn-default" v-bind:class="{ active: showEventHolidayList }" v-on:click="showEventHolidayList=!showEventHolidayList" role="button"><span class="glyphicon" v-bind:class="{ 'glyphicon-chevron-up': showEventHolidayList, 'glyphicon-chevron-down': !showEventHolidayList }" aria-hidden="true"></span> {{ showEventHolidayList ? "Hide list of school events and holidays" : "Show list of school events and holidays" }}</button>
+                  </div>
+                </div>
+              </div>
+              <div class="step" v-bind:class="{ stepActive: showEventHolidayList }">
+                <div class="row">
+                  <div class="col-md-7">
+                    <h3>School events</h3>
+                      <table class="table table-striped table-condensed">
+                        <thead><tr><td>Start Date</td><td>End Date</td><td>Title</td></tr></thead>
+                        <tbody>
+                          <tr v-for="e in calEvents.school"><td>{{e.start.format('ll')}}</td><td>{{e.end.clone().subtract(1,'day').isSame(e.start) ? 'N/A' : e.end.clone().subtract(1,'day').format('ll')}}</td><td>{{e.title}}</td></tr>
+                        </tbody>
+                      </table>
+                  </div>
+                  <div class="col-md-5">
+                    <h3>Holidays</h3>
+                      <table class="table table-striped table-condensed">
+                        <thead><tr><td>Start Date</td><td>End Date</td><td>Title</td></tr></thead>
+                        <tbody>
+                          <tr v-for="e in calEvents.holiday"><td>{{e.start.format('ll')}}</td><td>{{e.end.clone().subtract(1,'day').isSame(e.start) ? 'N/A' : e.end.clone().subtract(1,'day').format('ll')}}</td><td>{{e.title}}</td></tr>
+                        </tbody>
+                      </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <h2>Edit template strings</h2>
+          <div class="panel panel-default">
+            <div class="panel-body">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="templateTitle">Title</label>
+                    <textarea class="form-control" id="templateTitle" v-model="template.title"></textarea>
+                  </div>
+                  <div class="form-group">
+                    <label for="templateDescription">Description</label>
+                    <textarea class="form-control" id="templateDescription" v-model="template.description"></textarea>
+                    <em>* Description will not show on the generated image, only appears in the ics calendar file.</em>
+                  </div>
+                  <div class="form-group">
+                    <label for="templateVenue">Venue</label>
+                    <textarea class="form-control" id="templateVenue" v-model="template.venue"></textarea>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="panel panel-default">
+                    <div class="panel-heading">Preview</div>
+                    <div class="panel-body">
+                      <h4>Title: </h4>
+                      <pre>{{ parseTemplateString(lessons[0], template.title) }}</pre>
+                      <h4>Description: </h4>
+                      <pre>{{ parseTemplateString(lessons[0], template.description) }}</pre>
+                      <h4>Venue: </h4>
+                      <pre>{{ parseTemplateString(lessons[0], template.venue) }}</pre>
+                    </div>
+                  </div>
+                  The following variables can be used: <code>{subjectCode}</code>, <code>{subjectTitle}</code>, <code>{group}</code>, <code>{activity}</code>, <code>{activityShort}</code>, <code>{day}</code>, <code>{startTime}</code>, <code>{endTime}</code>, <code>{campus}</code>, <code>{campusShort}</code>, <code>{venue}</code>, <code>{startWeek}</code>, <code>{endWeek}</code>, <code>{forEvery}</code>
+                </div>
+              </div>
+            </div>
+          </div>
+          <br>
+          <button class="btn btn-success" v-on:click="activeStep++; setTimeout(function(){render()}, 100)">Done &raquo;</button>
+        </div>
+      </div>
+      <div class="step" v-bind:class="{ stepActive: activeStep == 4 }">
+        <h1>Result</h1>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="alert alert-success" role="alert">
+              <strong>Tips: </strong> Save as ICS, then you can <a href="https://support.google.com/calendar/answer/37118?hl=zh-Hant" target="_blank" rel="noopener"><strong>import them to Google Calendar easily</strong></a>.
+            </div>
+            <div class="" role="group" aria-label="Navigation" v-bind:class="{ step: imageRendering }">
+              <a href="./" class="btn btn-default">Restart</a>
+              <button class="btn btn-info" v-on:click="activeStep--">&lt; Back</button>
+              <button class="btn btn-success" v-on:click="downloadIcs">Save as ICS &raquo;</button>
+              <button class="btn btn-success" v-on:click="downloadImages">Save as images &raquo;</button>
+            </div>
+          </div>
+        </div>
+        <hr>
+        <div class="step" v-bind:class="{ stepActive: imageRendering }">
+          <div class="alert alert-warning">
+            <strong>Generating images...</strong> {{ imageRenderingProcess }} image #{{ imageRenderingNumber+1 }}. <br>
+            <em>Keep this webpage focused. Do not move away.</em>
+          </div>
+        </div>
+        <div id="calendar-wrapper-outer"><div id="calendar-wrapper"><div id="calendar"></div></div></div>
+      </div>
+      </div>
+
+      <footer>
+        <br>
+        <div class="step" v-bind:class="{ stepActive: activeStep > 0 }">
+          <div class="row">
+            <div class="col-md-2"></div>
+            <div class="col-md-8">
+              <div class="panel panel-default">
+                <div class="panel-body">
+                  <a href="//hkcc.space/?cn=tagad" target="_blank"><img class="img-responsive" v-bind:src="adsImgSrc[currentAdsImg]" alt="hkcc.space"></a>
+                  <span class="pull-right"><strong>(自家廣告)</strong></span>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-2"></div>
+          </div>
+        </div>
+        <br><hr>
+        <p>&copy; applelam, Mysam, Tom Chan, and many others 2017-2018 | Only latest versions of Firefox and Chrome are tested and supported. Work best in Chrome.</p>
+        <p style="color: #666;"><b>Site Info and Disclaimer:</b>
+        This website do not save or store any of the students' data. Users must login to HKCC system before using our services. <br>
+        We are not responsible for, and expressly disclaims all liability for, damages of any kind arising out of use, reference to, or reliance on any information contained within the site. While the information contained within the site is periodically updated, no guarantee is given that the information provided in this website is correct, complete, and up-to-date. </p>
+        </p>
+      </footer>
+    </div> <!-- /container -->
+    </div> 
+        <script src="js/require.js"></script>
+        <script src="js/main.js?v=Nie2ziey"></script>
+
+        <script>
+            (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
+            function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
+            e=o.createElement(i);r=o.getElementsByTagName(i)[0];
+            e.src='//www.google-analytics.com/analytics.js';
+            r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
+            ga('create','UA-105388022-2','auto');ga('send','pageview', {'page':location.pathname+location.search+location.hash});
+        </script>
+    </body>
+</html>
