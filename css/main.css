@@ -1,0 +1,35 @@
+
+
+/* ==========================================================================
+   Author's custom styles
+   ========================================================================== */
+
+
+body {
+    padding-top: 50px;
+    padding-bottom: 20px;
+}
+.step {
+	display: none;
+}
+.stepActive {
+	display: block;
+}
+
+.fc-agendaWeek-view tr {
+    height: 30px;
+}
+
+.fc-agendaDay-view tr {
+    height: 30px;
+}
+
+.fc-event {
+	overflow: visible;
+	padding: 3px;
+}
+
+.fc-view-container {
+  font-family: arial;
+	background-color: #fbfbfb;
+}
