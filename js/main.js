@@ -29,86 +29,44 @@ require(["vuejs", "jquery", "moment", "fullcalendar", "ics", "FileSaver", "html2
     // http://www.hkcc-polyu.edu.hk/students/Academic_calendar/Academic_Calendar_2017_18.pdf
     var calEvents = {
         school: [
-            // {
-            //     start: "20170830",
-            //     end: "20170913",
-            //     title: "Add/Drop Period for Sem 1"
-            // }, {
-            //     start: "20170904",
-            //     title: "Sem 1 commences (13 teaching weeks: Sep 4 - Dec 2, 2017)"
-            // }, {
-            //     start: "20171004",
-            //     title: "Mid-Autumn Festival (all evening classes suspended)"
-            // }, {
-            //     start: "20171015",
-            //     end: "20171016",
-            //     title: "Graduation Ceremony"
-            // }, {
-            //     start: "20171202",
-            //     title: "Sem 1 teaching ends"
-            // }, {
-            //     start: "20171204",
-            //     end: "20171208",
-            //     title: "Revision Period for Sem 1"
-            // }, {
-            //     start: "20171209",
-            //     end: "20171231",
-            //     title: "Examination Period for Sem 1"
-            // }, {
-            //     start: "20171222",
-            //     title: "Winter Solstice (all evening examinations suspended)"
-            // }, {
-            //     start: "20180116",
-            //     title: "Announcement of Sem 1 overall assessment results"
-            // }, {
-            //     start: "20180117",
-            //     end: "20180131",
-            //     title: "Add/Drop Period for Sem 2"
-            // }, {
-            //     start: "20180122",
-            //     title: "Sem 2 commences (13 teaching weeks: Jan 22 - Apr 28, 2018)"
-            // },
-            // {start:"20180215",title:"Lunar New Year's Eve (all evening classes suspended)"},
-            // {start:"20180428",title:"Sem 2 teaching ends"},
-            // {start:"20180430",end:"20180504",title:"Revision Period for Sem 2"},
-            // {start:"20180505",end:"20180527",title:"Examination Period for Sem 2"},
-            // {start:"20180612",title:"Announcement of Sem. 2 overall assessment results"},
-            {start:"20180613",end:"20180622",title:"Add/Drop Period for Summer Term"},
-            {start:"20180615",title:"Summer Term commences (7 teaching weeks: Jun 15 - Aug 2, 2018)"},
-            {start:"20180802",title:"Summer Term teaching ends"},
-            {start:"20180803",end:"20180806",title:"Revision Period for Summer Term"},
-            {start:"20180807",end:"20180815",title:"Examination Period for Summer Term"},
-            {start:"20180828",title:"Announcement of Summer Term overall assessment results"},
-            {start:"20180901",title:"Academic Year 2017-18 ends"}
+            {start:"20180829",end:"20180912",title:"Add / Drop Period for Sem 1"},
+            {start:"20180903",title:"Sem 1 commences (13 teaching weeks: Sep 3 - Dec 1, 2018)"},
+            {start:"20180924",title:"Mid-Autumn Festival (all evening classes suspended)"},
+            {start:"20181020",end:"20181021",title:"Graduation Ceremony"},
+            {start:"20181201",title:"Sem 1 teaching ends"},
+            {start:"20181203",end:"20181207",title:"Revision Period for Sem 1"},
+            {start:"20181208",end:"20181230",title:"Examination Period for Sem 1"},
+            {start:"20181222",title:"Winter Solstice (all evening examinations suspended)"},
+            {start:"20190115",title:"Announcement of Sem 1 assessment results"},
+            {start:"20190116",end:"20190130",title:"Add/Drop Period for Sem 2"},
+            {start:"20190121",title:"Sem 2 commences (13 teaching weeks: Jan 21 - Apr 27, 2019)"},
+            // {start:"20190427",title:"Sem 2 teaching ends"},
+            // {start:"20190429",end:"20190503",title:"Revision Period for Sem 2"},
+            // {start:"20190504",end:"20190526",title:"Examination Period for Sem 2"},
+            // {start:"20190612",title:"Announcement of Sem 2 assessment results"},
+            // {start:"20190613",end:"20190622",title:"Add/Drop Period for Summer Term"},
+            // {start:"20190617",title:"Summer Term commences (7 teaching weeks: Jun 17 -083, 2019)"},
+            // {start:"20190803",title:"Summer Term teaching ends"},
+            // {start:"20190804",end:"20190806",title:"Revision Period for Summer Term"},
+            // {start:"20190807",end:"20190815",title:"Examination Period for Summer Term"},
+            // {start:"20190828",title:"Announcement of Summer Term assessment results"},
+            // {start:"20190901",title:"Academic Year 2018-19 ends"},
         ],
         holiday: [
-            // {
-            //     start: "20171002",
-            //     title: "The day following National Day"
-            // }, {
-            //     start: "20171005",
-            //     title: "The day following Mid-Autumn Festival"
-            // }, {
-            //     start: "20171028",
-            //     title: "Chung Yeung Festival"
-            // }, {
-            //     start: "20171225",
-            //     title: "Christmas Day"
-            // }, {
-            //     start: "20171226",
-            //     title: "The first weekday after Christmas Day"
-            // }, {
-            //     start: "20180101",
-            //     title: "First Day of January"
-            // },
-            // {start:"20180216",end:"20180219",title:"Lunar New Year Holidays"},
-            // {start:"20180220",end:"20180224",title:"Lunar New Year Break (all day-time and evening classes suspended)"},
-            // {start:"20180330",end:"20180402",title:"Easter Holidays"},
-            // {start:"20180405",title:"Ching Ming Festival"},
-            // {start:"20180501",title:"Labour Day"},
-            // {start:"20180522",title:"The Buddha's Birthday"},
-            {start:"20180618",title:"Tuen Ng Festival"},
-            {start:"20180702",title:"The day following The HKSAR Establishment Day"}
+            {start:"20180925",title:"The day following Mid-Autumn Festival"},
+            {start:"20181001",title:"The National Day"},
+            {start:"20181017",title:"Chung Yeung Festival"},
+            {start:"20181225",title:"Christmas Day"},
+            {start:"20181226",title:"The first weekday after Christmas Day"},
+            {start:"20190101",title:"First Day of January"},
+            // {start:"20190204",end:"20190209",title:"Lunar New Year Break (all day-time and evening classes suspended)"},
+            // {start:"20190205",end:"20190207",title:"Lunar New Year Holidays"},
+            // {start:"20190405",title:"Ching Ming Festival"},
+            // {start:"20190419",end:"20190422",title:"Easter Holidays"},
+            // {start:"20190501",title:"Labour Day"},
+            // {start:"20190513",title:"The day following the Buddha's Birthday"},
+            // {start:"20190607",title:"Tuen Ng Festival"},
+            // {start:"20190701",title:"The HKSAR Establishment Day"},
         ]
     };
 
