@@ -201,9 +201,6 @@ require(["vuejs", "jquery", "moment", "fullcalendar", "ics", "FileSaver", "html2
             return monents;
 
         };
-        this.clone = function() {
-            return new Lesson(course, activity, day, startTime, endTime, campus, venue, startWeek, endWeek, forEvery);
-        };
     }
 
     // hex: "#123456"
@@ -407,17 +404,8 @@ require(["vuejs", "jquery", "moment", "fullcalendar", "ics", "FileSaver", "html2
                     }
 
                     if (typeTwo) {
-                        var l = current.clone();
-                        l.activity = typeTwo[1];
-                        l.day = typeTwo[2];
-                        l.startTime = typeTwo[3];
-                        l.endTime = typeTwo[4];
-                        l.campus = typeTwo[5];
-                        l.venue = typeTwo[6];
-                        l.startWeek = typeTwo[7];
-                        l.endWeek = typeTwo[8];
-                        l.forEvery = typeTwo[9];
-
+                        // FIXME: better clone() while keep activityShort and campusShort updated
+                        var l = new Lesson(current.course, typeTwo[1], typeTwo[2], typeTwo[3], typeTwo[4], typeTwo[5], typeTwo[6], typeTwo[7], typeTwo[8], typeTwo[9]);
                         this.lessons.push(l);
                         continue;
                     }
@@ -436,7 +424,7 @@ require(["vuejs", "jquery", "moment", "fullcalendar", "ics", "FileSaver", "html2
 
                 for (var i in lesson) {
                     var v = lesson[i];
-                    if (v instanceof Object) {
+                    if (v instanceof Object) { // it is a course
                         for (var j in lesson[i]) {
                             var v = lesson[i][j];
                             if (typeof v === "string")
