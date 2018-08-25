@@ -811,7 +811,10 @@ require(["vuejs", "jquery", "moment", "fullcalendar", "ics", "FileSaver", "html2
         template: '<tr><td>{{ course.subjectCode }}</td><td><input class="form-control" v-model="course.subjectTitle"></td><td>{{ course.group }}</td><td><input type="color" v-model="course.color"/></td></tr>'
     });
 
-    Vue.filter('mask', function (str) {
-      return str.replace(/(Student No\.:\s+|Name:\s+)([^\t]+)\t/g, "$1***\t");
-    })
+    Vue.filter('mask', window.mask);
 });
+
+// FIXME: don't pollute window
+window.mask = function (str) {
+  return str.replace(/(Student No\.:\s+|Name:\s+)([^\t]+)\t/g, "$1***\t");
+};
