@@ -366,8 +366,9 @@ require(["vuejs", "jquery", "moment", "fullcalendar", "ics", "FileSaver", "html2
                 var typeOneRegex = /^([^\t]+?)\t([^\t]+?)\t([^\t]+?)\t([^\t]+?)\t([^\t]+?)\t([^\t]+?)\t([^\t]+?)\t([^\t]+?)\t([^\t]+?)\t([^\t]+?)\t([^\t]+?)\t([^\t]+?)$/;
 
                 // typeTwo record are the record without subjectcode etc
-                // "Tutorial    Thu 14:30   15:25   Hung Hom Bay    602 1 (07-Sep)  2 (14-Sep)  1 wk(s)"
-                var typeTwoRegex = /^([^\t]+?)\t([^\t]+?)\t([^\t]+?)\t([^\t]+?)\t([^\t]+?)\t([^\t]+?)\t([^\t]+?)\t([^\t]+?)\t([^\t]+?)$/;
+                // "Tutorial    Thu 14:30   15:25   Hung Hom Bay    602 1 (07-Sep)  2 (14-Sep)  1 wk(s)" or
+                // "            Tutorial    Mon 10:00   10:55   Hung Hom Bay    319 6 (08-Oct)  13 (26-Nov) 1 wk(s)"
+                var typeTwoRegex = /^(?:\t\t\t)?([^\t]+?)\t([^\t]+?)\t([^\t]+?)\t([^\t]+?)\t([^\t]+?)\t([^\t]+?)\t([^\t]+?)\t([^\t]+?)\t([^\t]+?)$/;
 
                 var current;
                 var colorIndex = 0;
